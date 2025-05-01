@@ -1,0 +1,15 @@
+import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv("C:/Users/Aniket/Downloads/titanic.csv")
+df.info()
+df.head()
+
+plt.figure(figsize=(10,5))
+sns.boxplot(x='Sex',y='Age',hue='Survived',data=df,palette='pastel')
+plt.xlabel('Gender')
+plt.ylabel('Age')
+plt.title('Age Distribution by Gender And Survival Status')
+plt.show()

@@ -1,0 +1,16 @@
+import pandas as pd
+import numpy as np
+
+
+bf = pd.read_csv("Titanic.csv")
+bf.head()
+
+bf.isnull().sum()
+bf.shape
+
+bf['Survived'] = bf['Survived'].astype('category')
+bf['Pclass'] = bf['Pclass'].astype('category')
+bf['Embarked'] = bf['Embarked'].astype('category')
+bf.head()
+
+bf = bf.rename(columns={'Name': 'Full Name'})

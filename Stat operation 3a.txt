@@ -1,0 +1,17 @@
+import pandas as pd
+# Load dataset
+df = pd.read_csv("Sample_Data.csv")
+# Group by categorical variable (e.g., AgeGroup)
+grouped = df.groupby('AgeGroup')
+
+# Calculate summary statistics
+summary_stats = grouped['Income'].agg(['mean', 'median', 'min', 'max', 'std'])
+
+print("Summary Statistics of Income grouped by Age Group:")
+print(summary_stats)
+
+# Create a list of numeric values per AgeGroup
+grouped_lists = grouped['Income'].apply(list)
+
+print("\nList of Income values for each Age Group:")
+print(grouped_lists)

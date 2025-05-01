@@ -1,0 +1,37 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv("Iris.csv")
+
+print("Feature Types:")
+print(df.dtypes)
+
+data = df.drop(columns='Id')
+
+sns.set(style="whitegrid")
+
+data.hist(bins=15, figsize=(12, 8), layout=(2, 2), edgecolor='black')
+plt.suptitle('Histograms of Iris Features', fontsize=16)
+plt.tight_layout()
+plt.show()
+
+plt.figure(figsize=(12, 8))
+for i, column in enumerate(data.columns[:-1], 1):  # Skip 'Species'
+    plt.subplot(2, 2, i)
+    sns.boxplot(y=data[column], color="skyblue")
+    plt.title(f'Boxplot of {column}')
+plt.tight_layout()
+plt.show()
+
+print("\nDescriptive Statistics:")
+print(data.describe())
+
+ Optional: Detect outliers with IQR method
+print("\nPotential Outliers:")
+for column in data.columns[:-1]:
+    Q1 = data[column].quantile(0.25)
+    Q3 = data[column].quantile(0.75)
+    IQR = Q3 - Q1
+    outliers = data[(data[column] < Q1 - 1.5 * IQR) | (data[column] > Q3 + 1.5 * IQR)]
+    print(f"{column}: {len(outliers)} outlier(s)")

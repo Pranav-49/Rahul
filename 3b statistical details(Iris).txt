@@ -1,0 +1,25 @@
+import pandas as pd
+
+
+# Step 1: Load the iris dataset
+df = pd.read_csv('iris.csv')  # Make sure iris.csv is in your working directory
+
+
+# Step 2: Check unique species
+print("Unique Species in dataset:", df['Species'].unique())
+
+
+# Step 3: Define a function to display statistics for each species
+def display_statistics(species_name):
+    print(f"\n--- Statistics for {species_name} ---")
+    species_df = df[df['Species'] == species_name]
+    
+    # Basic statistical description
+    description = species_df.describe(percentiles=[0.25, 0.5, 0.75])
+    print(description)
+
+
+# Step 4: Display statistics for each species
+display_statistics('Iris-setosa')
+display_statistics('Iris-versicolor')
+display_statistics('Iris-virginica')  # Corrected repeated 'versicolor' to 'virginica'

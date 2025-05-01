@@ -1,0 +1,73 @@
+import pandas as pd
+import numpy as np
+
+
+data = {
+    'Student_ID': range(1, 11),
+    'Name': ['Alice', 'Bob', 'Charlie', 'David', 'Eva', 'Frank', 'Grace', 'Helen', 'Ian', 'Jack'],
+    'Math_Score': [78, 85, 92, 88, np.nan, 76, 102, 55, 60, 95],  # 102 is an outlier, one missing value
+    'Science_Score': [72, 80, 78, 85, 90, 70, 89, np.nan, 60, 105],  # 105 is an outlier
+    'Attendance_Percentage': [85, 90, 75, 88, 70, 95, 100, 65, 82, 78]
+}
+
+
+
+df = pd.DataFrame(data)
+df.to_csv('Academic_performance.csv', index=False)
+
+
+ Load the dataset
+df = pd.read_csv('Academic_performance.csv')
+
+# Check for missing values
+print("Missing Values:\n", df.isnull().sum())
+
+df.columns = df.columns.str.strip()
+
+# Handle missing values (e.g., fill with mean for numeric columns)
+df['Math_Score'] = df['Math_Score'].fillna(df['Math_Score'].mean())
+df['Science_Score'] = df['Science_Score'].fillna(df['Science_Score'].mean())
+
+# Confirm replacement
+print("\nAfter handling missing values:\n", df)
+
+
+# Define a function to detect outliers using IQR
+def remove_outliers_iqr(df, column):
+    Q1 = df[column].quantile(0.25)
+    Q3 = df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 1.5 * IQR
+    upper_bound = Q3 + 1.5 * IQR
+    print(f"\n{column} - Outlier Range: ({lower_bound}, {upper_bound})")
+    return df[(df[column] >= lower_bound) & (df[column] <= upper_bound)]
+
+# Remove outliers
+df = remove_outliers_iqr(df, 'Math_Score')
+df = remove_outliers_iqr(df, 'Science_Score')
+
+# Reset index after outlier removal
+df.reset_index(drop=True, inplace=True)
+print("\nData after removing outliers:\n", df)
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+
+# Before transformation
+plt.figure(figsize=(10, 4))
+plt.subplot(1, 2, 1)
+sns.histplot(df['Attendance_Percentage'], kde=True)
+plt.title("Original Attendance Distribution")
+
+# Apply log transformation
+df['Log_Attendance'] = np.log1p(df['Attendance_Percentage'])
+
+# After transformation
+plt.subplot(1, 2, 2)
+sns.histplot(df['Log_Attendance'], kde=True, color='orange')
+plt.title("Log-Transformed Attendance Distribution")
+plt.tight_layout()
+plt.show()
+
+print("\nFinal Processed Dataset:\n", df)
